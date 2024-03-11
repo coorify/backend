@@ -1,7 +1,7 @@
 package perm
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 )
 
@@ -95,7 +95,7 @@ func NewPermValue(val string) *Perm {
 	}
 
 	if !found {
-		err := fmt.Errorf("perm group not found")
+		err := errors.New("perm group not found")
 		panic(err)
 	}
 

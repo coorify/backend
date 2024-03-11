@@ -49,27 +49,23 @@ func PasswordUpdate(c *gin.Context) {
 	db := c.MustGet(field.SYS_DB).(*gorm.DB)
 	cas := c.MustGet(field.SYS_JWTCLAMIS).(*jwt.Clamis)
 
-	fd := &model.Account{
-		UUID: cas.UUID,
-	}
-
-	err = db.Model(fd).Where(fd).First(fd).Error
-	if err != nil || fd.Status == 0 {
+	act, err := cas.ToAccount(c)
+	if err != nil || act.Status == 0 {
 		reply.Fail(c)
 		return
 	}
 
-	if !fd.Verify(body.Old) {
+	if !act.Verify(body.Old) {
 		reply.FailWithMessage("旧密码不匹配", c)
 		return
 	}
 
 	cd := &model.Account{
-		UUID: fd.UUID,
+		UUID: act.UUID,
 	}
 
 	up := &model.Account{
-		Password: crypto.EncodePassword(fd.Username, body.New),
+		Password: crypto.EncodePassword(act.Username, body.New),
 	}
 
 	err = db.Model(cd).Where(cd).Updates(up).Error
