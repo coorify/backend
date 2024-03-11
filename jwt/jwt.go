@@ -3,8 +3,12 @@ package jwt
 import (
 	"time"
 
+	"github.com/coorify/backend/field"
+	"github.com/coorify/backend/model"
+	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid/v5"
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 type Clamis struct {
@@ -40,8 +44,8 @@ func (j *jwtEncoding) MustEncode(c *Clamis) string {
 	ins := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwtClamis{
 		Payload: c,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Audience:  jwt.ClaimStrings{"COORIFY"},
-			Issuer:    "COORIFY",
+			Audience:  jwt.ClaimStrings{"Coorify Frontend"},
+			Issuer:    "Coorify Backend",
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(j.Expire() * int(time.Second)))),
 		},
@@ -73,4 +77,17 @@ func (j *jwtEncoding) Decode(s string) (*Clamis, bool) {
 
 func (j *jwtEncoding) Expire() int {
 	return j.expire
+}
+
+func (c *Clamis) ToAccount(ctx *gin.Context) (*model.Account, error) {
+	db := ctx.MustGet(field.SYS_DB).(*gorm.DB)
+	md := &model.Account{
+		UUID: c.UUID,
+	}
+
+	if err := db.Model(md).Where(md).First(md).Error; err != nil {
+		return nil, err
+	}
+
+	return md, nil
 }

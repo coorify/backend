@@ -1,6 +1,9 @@
 package perm
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type PermValue struct {
 	Value string `json:"value"`
@@ -83,6 +86,19 @@ func NewAdminPerm(grp, desc, val string) *Perm {
 }
 
 func NewPermValue(val string) *Perm {
+	found := false
+	for _, p := range perms {
+		if p.Value == val {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		err := fmt.Errorf("perm group not found")
+		panic(err)
+	}
+
 	return &Perm{
 		Group:   "",
 		Desc:    "",
