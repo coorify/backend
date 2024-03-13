@@ -38,10 +38,12 @@ func RolePermissionUpdate(c *gin.Context) {
 		})
 	}
 
-	if err := db.Model(&model.RolePerm{}).Create(pms).Error; err != nil {
-		db.Model(dl).Unscoped().Where(dl).Delete(dl)
-		reply.FailWithMessage(err.Error(), c)
-		return
+	if len(pms) > 0 {
+		if err := db.Model(&model.RolePerm{}).Create(pms).Error; err != nil {
+			db.Model(dl).Unscoped().Where(dl).Delete(dl)
+			reply.FailWithMessage(err.Error(), c)
+			return
+		}
 	}
 
 	reply.Ok(c)

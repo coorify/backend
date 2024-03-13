@@ -47,7 +47,7 @@ func Sigin(c *gin.Context) {
 		return
 	}
 
-	if rs.Status == 0 {
+	if rs.Status&1 == 0 {
 		reply.FailWithMessage("账号已被冻结", c)
 		return
 	}

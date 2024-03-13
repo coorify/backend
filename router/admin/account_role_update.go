@@ -37,9 +37,11 @@ func AccountRoleUpdate(c *gin.Context) {
 		return
 	}
 
-	if err := db.Model(act).Association("Roles").Replace(rls); err != nil {
-		reply.FailWithMessage(err.Error(), c)
-		return
+	if len(rls) > 0 {
+		if err := db.Model(act).Association("Roles").Replace(rls); err != nil {
+			reply.FailWithMessage(err.Error(), c)
+			return
+		}
 	}
 
 	reply.Ok(c)

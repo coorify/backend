@@ -16,13 +16,16 @@ func AccountStatusUpdate(c *gin.Context) {
 		return
 	}
 
-	db := c.MustGet(field.SYS_DB).(*gorm.DB)
-	md := &model.Account{
-		UUID: body.ToUUID(),
+	expr := gorm.Expr("status | ?", body.Status)
+	if !body.Enable {
+		expr = gorm.Expr("status & ~?", body.Status)
 	}
 
-	if err := db.Model(md).Where(md).Update("status", body.Status).Error; err != nil {
+	db := c.MustGet(field.SYS_DB).(*gorm.DB)
+
+	if err := db.Model(&model.Account{}).Where("uuid = ?", body.ToUUID()).Update("status", expr).Error; err != nil {
 		reply.FailWithMessage(err.Error(), c)
+		return
 	}
 
 	reply.Ok(c)

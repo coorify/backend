@@ -63,7 +63,7 @@ func (p *permCache) fromDB(uid uuid.UUID, c *gin.Context) []*PermValue {
 		}
 	} else {
 		for _, rl := range act.Roles {
-			if rl.Status == 0 {
+			if rl.Status&1 == 0 {
 				continue
 			}
 			for _, p := range rl.Perms {

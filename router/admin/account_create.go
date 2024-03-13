@@ -37,11 +37,18 @@ func AccountCreate(c *gin.Context) {
 	}
 
 	db := c.MustGet(field.SYS_DB).(*gorm.DB)
+	var rls *[]model.Role
+	if err := db.Model(&model.Role{}).Where("status&2 != 0").Find(&rls).Error; err != nil {
+		reply.FailWithMessage(err.Error(), c)
+		return
+	}
+
 	act := &model.Account{
 		Username: body.Username,
 		Nickname: body.Nickname,
 		Phone:    body.Phone,
 		Password: body.Password,
+		Roles:    *rls,
 	}
 
 	if err := db.Model(act).Create(act).Error; err != nil {

@@ -50,7 +50,7 @@ func PasswordUpdate(c *gin.Context) {
 	cas := c.MustGet(field.SYS_JWTCLAMIS).(*jwt.Clamis)
 
 	act, err := cas.ToAccount(c)
-	if err != nil || act.Status == 0 {
+	if err != nil || act.Status&1 == 0 {
 		reply.Fail(c)
 		return
 	}
