@@ -7,7 +7,7 @@ import (
 )
 
 func EncodePassword(uname string, pswd string) string {
-	if uname == "" {
+	if pswd == "" {
 		return ""
 	}
 
