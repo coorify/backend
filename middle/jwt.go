@@ -10,7 +10,14 @@ import (
 )
 
 func Jwt(c *gin.Context) {
-	tk := c.GetHeader("token")
+	name := "token"
+	tk := c.GetHeader(name)
+	if len(tk) == 0 {
+		tk = c.Query(name)
+	}
+	if len(tk) == 0 {
+		tk, _ = c.Cookie(name)
+	}
 
 	jwt := c.MustGet(field.SYS_JWT).(jwt.JwtEncoding)
 	cas, ok := jwt.Decode(tk)
