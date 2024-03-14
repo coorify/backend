@@ -8,6 +8,7 @@ import (
 	"github.com/coorify/backend/option"
 	"github.com/coorify/backend/reply"
 	"github.com/coorify/backend/types"
+	"github.com/coorify/go-value"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -28,9 +29,9 @@ func AccountFind(c *gin.Context) {
 	var total int64
 	var acts []*model.Account
 	db := c.MustGet(field.SYS_DB).(*gorm.DB)
-	o := c.MustGet(field.SYS_OPTION).(*option.Option)
+	adm := value.MustGet(c.MustGet(field.SYS_OPTION), "Admin").(option.AdminOption)
 
-	db = db.Model(&model.Account{}).Preload("Roles").Where("username <> ?", o.Admin.Username) // 不查询admin账号
+	db = db.Model(&model.Account{}).Preload("Roles").Where("username <> ?", adm.Username) // 不查询admin账号
 	if len(body.Keyword) != 0 {
 		db = db.Where(fmt.Sprintf("`%s` like ?", body.Category), fmt.Sprintf("%%%s%%", body.Keyword))
 	}

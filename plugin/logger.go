@@ -7,12 +7,11 @@ import (
 	"time"
 
 	"github.com/coorify/backend/logger"
-	"github.com/coorify/backend/option"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
-func Logger(opt *option.Option) gin.HandlerFunc {
+func Logger(opt interface{}) gin.HandlerFunc {
 	hostname, err := os.Hostname()
 	if err != nil {
 		hostname = "unknow"

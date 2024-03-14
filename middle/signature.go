@@ -9,8 +9,8 @@ import (
 	"net/http"
 
 	"github.com/coorify/backend/field"
-	"github.com/coorify/backend/option"
 	"github.com/coorify/backend/reply"
+	"github.com/coorify/go-value"
 	"github.com/emmansun/gmsm/sm2"
 	"github.com/gin-gonic/gin"
 )
@@ -29,8 +29,7 @@ func (w replySignatureWriter) Write(b []byte) (int, error) {
 }
 
 func Signature(c *gin.Context) {
-	opt := c.MustGet(field.SYS_OPTION).(*option.Option)
-	if opt.Signature == nil {
+	if value.MustGet(c.MustGet(field.SYS_OPTION), "Signature") == nil {
 		return
 	}
 

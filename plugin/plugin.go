@@ -1,13 +1,12 @@
 package plugin
 
 import (
-	"github.com/coorify/backend/option"
 	"github.com/gin-gonic/gin"
 )
 
 type Server interface {
 	Engin() *gin.Engine
-	Option() *option.Option
+	Option() interface{}
 }
 
 func Setup(s Server) {
@@ -15,7 +14,7 @@ func Setup(s Server) {
 	o := s.Option()
 
 	e.Use(gin.Recovery())
-	e.Use(Option((o)))
+	e.Use(Option(o))
 	e.Use(Logger(o))
 	e.Use(Database(o))
 	e.Use(Cors(o))

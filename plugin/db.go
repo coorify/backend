@@ -5,6 +5,7 @@ import (
 	"github.com/coorify/backend/field"
 	"github.com/coorify/backend/model"
 	"github.com/coorify/backend/option"
+	"github.com/coorify/go-value"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -35,8 +36,11 @@ func initAdmin(db *gorm.DB, adm *option.AdminOption) error {
 	}).Error
 }
 
-func Database(opt *option.Option) gin.HandlerFunc {
-	drv := dialector.NewDialector(&opt.DB)
+func Database(opt interface{}) gin.HandlerFunc {
+	o := value.MustGet(opt, "DB").(option.DatabaseOption)
+	a := value.MustGet(opt, "Admin").(option.AdminOption)
+
+	drv := dialector.NewDialector(&o)
 
 	db, err := gorm.Open(drv, &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
@@ -49,7 +53,7 @@ func Database(opt *option.Option) gin.HandlerFunc {
 		panic(err)
 	}
 
-	if err = initAdmin(db, &opt.Admin); err != nil {
+	if err = initAdmin(db, &a); err != nil {
 		panic(err)
 	}
 

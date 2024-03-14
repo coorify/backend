@@ -12,18 +12,19 @@ import (
 	"github.com/coorify/backend/option"
 	"github.com/coorify/backend/plugin"
 	"github.com/coorify/backend/router"
+	"github.com/coorify/go-value"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	opt  *option.Option
+	opt  interface{}
 	eng  *gin.Engine
 	svr  *http.Server
 	exit chan error
 }
 
-func NewServer(opt *option.Option) *Server {
-	logger.SetLevel(opt.Logger.Level)
+func NewServer(opt interface{}) *Server {
+	logger.SetLevel(value.MustGet(opt, "Logger.Level").(string))
 	eng := gin.New()
 
 	svr := &Server{
@@ -42,12 +43,12 @@ func (s *Server) Engin() *gin.Engine {
 	return s.eng
 }
 
-func (s *Server) Option() *option.Option {
+func (s *Server) Option() interface{} {
 	return s.opt
 }
 
 func (s *Server) Group(relativePath string) *gin.RouterGroup {
-	r := s.opt.Router
+	r := value.MustGet(s.opt, "Router").(*option.RouterOption)
 	if r != nil {
 		return s.Engin().Group(r.Prefix).Group(relativePath, middle.Signature)
 	}
@@ -73,7 +74,7 @@ func (s *Server) Start() error {
 		return nil
 	}
 
-	opt := &s.opt.Server
+	opt := value.MustGet(s.opt, "Server").(option.ServerOption)
 
 	addr := fmt.Sprintf("%s:%d", opt.Host, opt.Port)
 	s.svr = &http.Server{
