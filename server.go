@@ -9,7 +9,6 @@ import (
 
 	"github.com/coorify/backend/logger"
 	"github.com/coorify/backend/middle"
-	"github.com/coorify/backend/option"
 	"github.com/coorify/backend/plugin"
 	"github.com/coorify/backend/router"
 	"github.com/coorify/go-value"
@@ -48,9 +47,9 @@ func (s *Server) Option() interface{} {
 }
 
 func (s *Server) Group(relativePath string) *gin.RouterGroup {
-	r := value.MustGet(s.opt, "Router").(*option.RouterOption)
-	if r != nil {
-		return s.Engin().Group(r.Prefix).Group(relativePath, middle.Signature)
+	prefix := value.GetWithDefault(s.opt, "Router.Prefix", "").(string)
+	if prefix != "" {
+		return s.Engin().Group(prefix).Group(relativePath, middle.Signature)
 	}
 	return s.Engin().Group(relativePath, middle.Signature)
 }
@@ -74,9 +73,10 @@ func (s *Server) Start() error {
 		return nil
 	}
 
-	opt := value.MustGet(s.opt, "Server").(option.ServerOption)
+	host := value.MustGet(s.opt, "Server.Host").(string)
+	port := value.MustGet(s.opt, "Server.Port").(int)
 
-	addr := fmt.Sprintf("%s:%d", opt.Host, opt.Port)
+	addr := fmt.Sprintf("%s:%d", host, port)
 	s.svr = &http.Server{
 		Addr:    addr,
 		Handler: s.eng,

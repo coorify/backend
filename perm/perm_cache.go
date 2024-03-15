@@ -4,7 +4,6 @@ import (
 	"github.com/coorify/backend/field"
 	"github.com/coorify/backend/logger"
 	"github.com/coorify/backend/model"
-	"github.com/coorify/backend/option"
 	"github.com/coorify/go-value"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid/v5"
@@ -40,7 +39,7 @@ func (p *permCache) fromDB(uid uuid.UUID, c *gin.Context) []*PermValue {
 	rs := make([]*PermValue, 0)
 	db := c.MustGet(field.SYS_DB).(*gorm.DB)
 
-	adm := value.MustGet(c.MustGet(field.SYS_OPTION), "Admin").(option.AdminOption)
+	admUsername := value.MustGet(c.MustGet(field.SYS_OPTION), "Admin.Username").(string)
 
 	act := &model.Account{
 		UUID: uid,
@@ -51,7 +50,7 @@ func (p *permCache) fromDB(uid uuid.UUID, c *gin.Context) []*PermValue {
 		return rs
 	}
 
-	if len(act.Roles) == 0 && act.Username == adm.Username {
+	if len(act.Roles) == 0 && act.Username == admUsername {
 		pms := AllPerm(true)
 		for _, p := range pms {
 			rs = append(rs, &p.PermValue)
