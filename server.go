@@ -22,6 +22,14 @@ type Server struct {
 	exit chan error
 }
 
+type SetupPlugin interface {
+	Plugin(s *Server) error
+}
+
+type SetupRouter interface {
+	Router(s *Server) error
+}
+
 func NewServer(opt interface{}) *Server {
 	logger.SetLevel(value.MustGet(opt, "Logger.Level").(string))
 	eng := gin.New()
@@ -31,9 +39,6 @@ func NewServer(opt interface{}) *Server {
 		opt:  opt,
 		exit: make(chan error, 1),
 	}
-
-	plugin.Setup(svr)
-	router.Setup(svr)
 
 	return svr
 }
@@ -80,6 +85,16 @@ func (s *Server) Start() error {
 	s.svr = &http.Server{
 		Addr:    addr,
 		Handler: s.eng,
+	}
+
+	plugin.Setup(s)
+	if v, ok := s.opt.(SetupPlugin); ok {
+		v.Plugin(s)
+	}
+
+	router.Setup(s)
+	if v, ok := s.opt.(SetupRouter); ok {
+		v.Router(s)
 	}
 
 	go func() {
