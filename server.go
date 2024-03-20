@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/fs"
+	"net"
 	"net/http"
 	"time"
 
@@ -37,7 +38,7 @@ func NewServer(opt interface{}) *Server {
 	svr := &Server{
 		eng:  eng,
 		opt:  opt,
-		exit: make(chan error, 1),
+		exit: make(chan error),
 	}
 
 	return svr
@@ -78,15 +79,6 @@ func (s *Server) Start() error {
 		return nil
 	}
 
-	host := value.MustGet(s.opt, "Server.Host").(string)
-	port := value.MustGet(s.opt, "Server.Port").(int)
-
-	addr := fmt.Sprintf("%s:%d", host, port)
-	s.svr = &http.Server{
-		Addr:    addr,
-		Handler: s.eng,
-	}
-
 	plugin.Setup(s)
 	if v, ok := s.opt.(SetupPlugin); ok {
 		v.Plugin(s)
@@ -97,11 +89,22 @@ func (s *Server) Start() error {
 		v.Router(s)
 	}
 
-	go func() {
+	host := value.MustGet(s.opt, "Server.Host").(string)
+	port := value.MustGet(s.opt, "Server.Port").(int)
 
-		logger.Infof("Listen on %s", addr)
-		err := s.svr.ListenAndServe()
-		if err == http.ErrServerClosed {
+	addr := fmt.Sprintf("%s:%d", host, port)
+	s.svr = &http.Server{
+		Handler: s.eng,
+	}
+
+	ln, err := net.Listen("tcp", addr)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		err := s.svr.Serve(ln)
+		if err != nil {
 			logger.Info("Server closed")
 			err = nil
 		}
@@ -109,7 +112,8 @@ func (s *Server) Start() error {
 		s.exit <- err
 	}()
 
-	return nil
+	logger.Infof("Listen on %s", addr)
+	return err
 }
 
 func (s *Server) Stop(grace bool) error {
