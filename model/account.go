@@ -22,9 +22,15 @@ func (Account) TableName() string {
 	return "sys_accounts"
 }
 
-func (a *Account) BeforeCreate(tx *gorm.DB) (err error) {
+func (a *Account) BeforeCreate(db *gorm.DB) (err error) {
+	var rls *[]Role
+	if err = db.Model(&Role{}).Where("status&2 != 0").Find(&rls).Error; err != nil {
+		return err
+	}
+
 	a.UUID = uuid.Must(uuid.NewV4())
 	a.Password = crypto.EncodePassword(a.Username, a.Password)
+	a.Roles = *rls
 	return nil
 }
 
