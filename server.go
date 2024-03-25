@@ -53,7 +53,7 @@ func (s *Server) Option() interface{} {
 }
 
 func (s *Server) Group(relativePath string) *gin.RouterGroup {
-	prefix := value.GetWithDefault(s.opt, "Router.Prefix", "").(string)
+	prefix := value.MustGet(s.opt, "Router.Prefix").(string)
 	if prefix != "" {
 		return s.Engin().Group(prefix).Group(relativePath, middle.Signature)
 	}

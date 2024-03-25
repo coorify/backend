@@ -29,7 +29,8 @@ func (w replySignatureWriter) Write(b []byte) (int, error) {
 }
 
 func Signature(c *gin.Context) {
-	if value.MustGet(c.MustGet(field.SYS_OPTION), "Signature") == nil {
+	enable := value.MustGet(c.MustGet(field.SYS_OPTION), "Signature.Enable").(bool)
+	if !enable {
 		return
 	}
 

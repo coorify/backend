@@ -11,7 +11,7 @@ import (
 )
 
 func mysqlDialector(opt *option.DatabaseOption) gorm.Dialector {
-	logger.Infof("database remote: %s:%d", opt.Host, opt.Port)
+	logger.Infof("gorm remote: %s:%d", opt.Host, opt.Port)
 
 	cf := mysql.Config{
 		DSNConfig: &cfg.Config{

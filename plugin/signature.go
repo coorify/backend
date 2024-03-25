@@ -5,16 +5,16 @@ import (
 	"encoding/hex"
 
 	"github.com/coorify/backend/field"
-	"github.com/coorify/backend/option"
 	"github.com/coorify/go-value"
 	"github.com/emmansun/gmsm/sm2"
 	"github.com/gin-gonic/gin"
 )
 
 func Signature(opt interface{}) gin.HandlerFunc {
-	o := value.GetWithDefault(opt, "Signature", nil).(*option.SignatureOption)
-
-	if o == nil {
+	enable := value.MustGet(opt, "Signature.Enable").(bool)
+	pri := value.MustGet(opt, "Signature.Pri").(string)
+	pub := value.MustGet(opt, "Signature.Pub").(string)
+	if !enable {
 		return func(ctx *gin.Context) {}
 	}
 
@@ -22,13 +22,13 @@ func Signature(opt interface{}) gin.HandlerFunc {
 	var priKey *sm2.PrivateKey = nil
 	var pubkey *ecdsa.PublicKey = nil
 
-	priBytes, _ := hex.DecodeString(o.Pri)
+	priBytes, _ := hex.DecodeString(pri)
 	priKey, err = sm2.NewPrivateKey(priBytes)
 	if err != nil {
 		panic(err)
 	}
 
-	pubBytes, _ := hex.DecodeString(o.Pub)
+	pubBytes, _ := hex.DecodeString(pub)
 	pubkey, err = sm2.NewPublicKey(pubBytes)
 	if err != nil {
 		panic(err)

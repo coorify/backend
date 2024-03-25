@@ -12,7 +12,7 @@ func AccountPermission(c *gin.Context) {
 	cas := c.MustGet(field.SYS_JWTCLAMIS).(*jwt.Clamis)
 	pc := c.MustGet(field.SYS_PERMCACHE).(perm.PermCache)
 
-	pvs := pc.Get(cas.UUID, true, c)
+	pvs := pc.Get(cas.UUID, c)
 	rep := make([]string, 0)
 	for _, p := range pvs {
 		rep = append(rep, p.Value)

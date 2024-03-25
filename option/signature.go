@@ -1,6 +1,7 @@
 package option
 
 type SignatureOption struct {
-	Pri string `required:"true"`
-	Pub string `required:"true"`
+	Enable bool   `default:"false"`
+	Pri    string `default:""`
+	Pub    string `default:""`
 }

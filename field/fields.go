@@ -8,4 +8,5 @@ const (
 	SYS_JWTCLAMIS = "$jwtcas"
 	SYS_SIGPRIKEY = "$sigprikey"
 	SYS_SIGPUBKEY = "$sigpubkey"
+	SYS_REDIS     = "$redis"
 )

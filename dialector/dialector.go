@@ -9,7 +9,7 @@ import (
 func NewDialector(opt *option.DatabaseOption) gorm.Dialector {
 	drv := opt.Driver
 
-	logger.Infof("database dialector: %s", drv)
+	logger.Infof("gorm dialector: %s", drv)
 
 	switch drv {
 	default:

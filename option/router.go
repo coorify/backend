@@ -1,5 +1,5 @@
 package option
 
 type RouterOption struct {
-	Prefix string
+	Prefix string `default:""`
 }

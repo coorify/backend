@@ -16,6 +16,7 @@ func Setup(s Server) {
 	e.Use(gin.Recovery())
 	e.Use(Option(o))
 	e.Use(Logger(o))
+	e.Use(Redis(o))
 	e.Use(Database(o))
 	e.Use(Cors(o))
 	e.Use(Signature(o))

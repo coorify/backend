@@ -14,7 +14,7 @@ func AccountMenu(c *gin.Context) {
 	cas := c.MustGet(field.SYS_JWTCLAMIS).(*jwt.Clamis)
 	pc := c.MustGet(field.SYS_PERMCACHE).(perm.PermCache)
 
-	pmvs := pc.Get(cas.UUID, false, c)
+	pmvs := pc.Get(cas.UUID, c)
 	pms := make([]string, 0)
 	for _, p := range pmvs {
 		pms = append(pms, p.Value)
