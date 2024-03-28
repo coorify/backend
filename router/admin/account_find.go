@@ -30,7 +30,7 @@ func AccountFind(c *gin.Context) {
 	db := c.MustGet(field.SYS_DB).(*gorm.DB)
 	admUsername := value.MustGet(c.MustGet(field.SYS_OPTION), "Admin.Username").(string)
 
-	db = db.Model(&model.Account{}).Preload("Roles").Where("username <> ?", admUsername) // 不查询admin账号
+	db = db.Model(&model.Account{}).Preload("Roles").Where("username <> ?", admUsername) // filter admin account
 	if len(body.Keyword) != 0 {
 		db = db.Where(fmt.Sprintf("`%s` like ?", body.Category), fmt.Sprintf("%%%s%%", body.Keyword))
 	}

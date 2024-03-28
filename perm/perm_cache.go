@@ -3,6 +3,7 @@ package perm
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/coorify/backend/field"
@@ -75,7 +76,7 @@ func (p *permCache) Get(uid uuid.UUID, c *gin.Context) []*PermValue {
 
 func (p *permCache) Has(uid uuid.UUID, val *PermValue, c *gin.Context) bool {
 	redisEnable := value.MustGet(c.MustGet(field.SYS_OPTION), "Redis.Enable").(bool)
-	redisKey := fmt.Sprintf("pc-%s", uid.String())
+	redisKey := fmt.Sprintf("PC-%s", strings.ToUpper(uid.String()))
 	// redisExp := fmt.Sprintf("pce-%s", uid.String())
 	if redisEnable {
 		redis := c.MustGet(field.SYS_REDIS).(*redis.Client)

@@ -32,7 +32,7 @@ func AccountCreate(c *gin.Context) {
 	body.Password = string(raws)
 
 	if len(body.Password) < 6 {
-		reply.FailWithMessage("新密码长度不足", c)
+		reply.FailWithMessage("invalid password length", c)
 		return
 	}
 

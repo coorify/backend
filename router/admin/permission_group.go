@@ -20,7 +20,7 @@ func PermissionGroup(c *gin.Context) {
 		return
 	}
 
-	// 自定义权限
+	// custom perms
 	var gps []*model.Perm
 	db := c.MustGet(field.SYS_DB).(*gorm.DB)
 	db = db.Model(&model.Perm{}).Distinct("`group`")
@@ -32,9 +32,9 @@ func PermissionGroup(c *gin.Context) {
 		return
 	}
 
-	// 系统权限
+	// system perms
 	gpsn := perm.GetGroups(body.Keyword)
-	// 合并所有权限
+	// merge perms
 	for _, p := range gps {
 		gpsn = append(gpsn, p.Group)
 	}
