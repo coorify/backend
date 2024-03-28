@@ -1,6 +1,8 @@
 package middle
 
 import (
+	"net/http"
+
 	"github.com/coorify/backend/field"
 	"github.com/coorify/backend/jwt"
 	"github.com/coorify/backend/perm"
@@ -19,7 +21,7 @@ func WithPerm(pm *perm.Perm) gin.HandlerFunc {
 
 		if !pc.Has(cas.UUID, &pm.PermValue, c) {
 			c.Abort()
-			reply.FailWithMessage("invalid permission", c)
+			reply.NewReply(http.StatusUnauthorized, nil, "invalid permission", c)
 		}
 	}
 }

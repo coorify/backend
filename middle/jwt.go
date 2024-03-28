@@ -23,7 +23,7 @@ func Jwt(c *gin.Context) {
 	cas, ok := jwt.Decode(tk)
 	if !ok {
 		c.Abort()
-		reply.NewReply(http.StatusUnauthorized, nil, "令牌过期", c)
+		reply.NewReply(http.StatusUnauthorized, nil, "token expires", c)
 	}
 
 	c.Set(field.SYS_JWTCLAMIS, cas)

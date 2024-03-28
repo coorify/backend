@@ -95,7 +95,7 @@ func NewPermValue(val string) *Perm {
 	}
 
 	if !found {
-		err := errors.New("perm group not found")
+		err := errors.New("invalid perm group")
 		panic(err)
 	}
 

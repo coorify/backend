@@ -37,18 +37,18 @@ func Sigin(c *gin.Context) {
 
 	rs := &model.Account{}
 	if err := db.Model(cd).Where(cd).First(rs).Error; err != nil {
-		reply.FailWithMessage("账号或密码错误", c)
+		reply.FailWithMessage("incorrect username or password", c)
 		return
 	}
 
 	bytes, err := base64.StdEncoding.DecodeString(body.Password)
 	if err != nil || !rs.Verify(string(bytes)) {
-		reply.FailWithMessage("账号或密码错误", c)
+		reply.FailWithMessage("incorrect username or password", c)
 		return
 	}
 
 	if rs.Status&1 == 0 {
-		reply.FailWithMessage("账号已被冻结", c)
+		reply.FailWithMessage("access denied", c)
 		return
 	}
 

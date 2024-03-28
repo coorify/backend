@@ -42,7 +42,7 @@ func PasswordUpdate(c *gin.Context) {
 	body.New = string(raws)
 
 	if len(body.New) < 6 {
-		reply.FailWithMessage("新密码长度不足", c)
+		reply.FailWithMessage("invalid password length", c)
 		return
 	}
 
@@ -56,7 +56,7 @@ func PasswordUpdate(c *gin.Context) {
 	}
 
 	if !act.Verify(body.Old) {
-		reply.FailWithMessage("旧密码不匹配", c)
+		reply.FailWithMessage("password not match", c)
 		return
 	}
 
