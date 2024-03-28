@@ -2,32 +2,28 @@ package plugin
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/coorify/backend/field"
 	"github.com/coorify/backend/logger"
+	"github.com/coorify/go-merge"
 	"github.com/coorify/go-value"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 )
 
-func Redis(opt interface{}) gin.HandlerFunc {
-	enable := value.MustGet(opt, "Redis.Enable").(bool)
-	host := value.MustGet(opt, "Redis.Host").(string)
-	port := value.MustGet(opt, "Redis.Port").(int)
-	pswd := value.MustGet(opt, "Redis.Password").(string)
-	db := value.MustGet(opt, "Redis.DB").(int)
+func Redis(o interface{}) gin.HandlerFunc {
+	enable := value.MustGet(o, "Redis.Enable").(bool)
 
 	if !enable {
 		return func(c *gin.Context) {}
 	}
 
-	ins := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", host, port),
-		Password: pswd,
-		DB:       db,
-	})
+	opt := &redis.Options{}
+	if err := merge.Merge(opt, value.MustGet(o, "Redis")); err != nil {
+		panic(err)
+	}
 
+	ins := redis.NewClient(opt)
 	res, err := ins.ClientInfo(context.Background()).Result()
 	if err != nil {
 		panic(err)

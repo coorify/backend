@@ -3,6 +3,7 @@ module github.com/coorify/backend
 go 1.22.0
 
 require (
+	github.com/coorify/go-merge v1.0.0
 	github.com/coorify/go-value v1.0.3
 	github.com/emmansun/gmsm v0.26.1
 	github.com/gin-contrib/cors v1.6.0

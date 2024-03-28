@@ -15,6 +15,8 @@ github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d/go.mod h1:8EPpV
 github.com/chenzhuoyu/iasm v0.9.0/go.mod h1:Xjy2NpN3h7aUqeqM+woSuuvxmIe6+DDsiNLIrkAmYog=
 github.com/chenzhuoyu/iasm v0.9.1 h1:tUHQJXo3NhBqw6s33wkGn9SP3bvrWLdlVIJ3hQBL7P0=
 github.com/chenzhuoyu/iasm v0.9.1/go.mod h1:Xjy2NpN3h7aUqeqM+woSuuvxmIe6+DDsiNLIrkAmYog=
+github.com/coorify/go-merge v1.0.0 h1:hzA7jWJ06ULI4jpxunkr7TPMwgDqQjPvjiUno8uF3OM=
+github.com/coorify/go-merge v1.0.0/go.mod h1:oqaEUcEIxIxT8q9DwnMRaEFrVkOPPs/43bohXVmr5Qk=
 github.com/coorify/go-value v1.0.3 h1:BBHsjm9ts48RprI5k/Pln8FwruSCWFGfnk9YqWLQT3Q=
 github.com/coorify/go-value v1.0.3/go.mod h1:RqgoNZyK+iRGb4gfMjqdfeZC+z6TdQ5uaepj2UUa1jw=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
