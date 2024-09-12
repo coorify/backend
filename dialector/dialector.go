@@ -12,6 +12,8 @@ func NewDialector(opt *option.DatabaseOption) gorm.Dialector {
 	logger.Infof("gorm dialector: %s", drv)
 
 	switch drv {
+	case "sqlite":
+		return sqliteDialector(opt)
 	default:
 		return mysqlDialector(opt)
 	}

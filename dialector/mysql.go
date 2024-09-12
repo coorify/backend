@@ -1,6 +1,7 @@
 package dialector
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/coorify/backend/logger"
@@ -11,6 +12,14 @@ import (
 )
 
 func mysqlDialector(opt *option.DatabaseOption) gorm.Dialector {
+	if opt.Port == 0 {
+		opt.Port = 3306
+	}
+
+	if opt.Host == "" || opt.Name == "" || opt.Username == "" || opt.Password == "" {
+		panic(errors.New("mysql option error"))
+	}
+
 	logger.Infof("gorm remote: %s:%d", opt.Host, opt.Port)
 
 	cf := mysql.Config{
