@@ -11,11 +11,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func Logger(opt interface{}) gin.HandlerFunc {
+func Logger(s Server) gin.HandlerFunc {
+
 	hostname, err := os.Hostname()
 	if err != nil {
 		hostname = "unknow"
 	}
+
 	return func(c *gin.Context) {
 		start := time.Now()
 		c.Next()

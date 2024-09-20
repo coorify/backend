@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Cors(opt interface{}) gin.HandlerFunc {
-	expire := value.MustGet(opt, "Jwt.Expire").(int)
+func Cors(s Server) gin.HandlerFunc {
+	expire := value.MustGet(s.Option(), "Jwt.Expire").(int)
 
 	cfg := cors.Config{
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},

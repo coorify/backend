@@ -16,6 +16,8 @@ type Server interface {
 }
 
 func Setup(s Server) {
+	s.Engin().GET("version", Version)
+
 	{
 		o := s.Engin().Group("/system/oauth")
 		o.GET("profileByJwt", oauth.ProfileByJwt)

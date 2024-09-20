@@ -10,10 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Signature(opt interface{}) gin.HandlerFunc {
-	enable := value.MustGet(opt, "Signature.Enable").(bool)
-	pri := value.MustGet(opt, "Signature.Pri").(string)
-	pub := value.MustGet(opt, "Signature.Pub").(string)
+func Signature(s Server) gin.HandlerFunc {
+	o := s.Option()
+
+	enable := value.MustGet(o, "Signature.Enable").(bool)
+	pri := value.MustGet(o, "Signature.Pri").(string)
+	pub := value.MustGet(o, "Signature.Pub").(string)
 	if !enable {
 		return func(ctx *gin.Context) {}
 	}

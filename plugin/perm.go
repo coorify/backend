@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Perm(opt interface{}) gin.HandlerFunc {
+func Perm(s Server) gin.HandlerFunc {
 	pc := perm.NewPermCache()
 
 	return func(c *gin.Context) {

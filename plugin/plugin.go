@@ -7,19 +7,21 @@ import (
 type Server interface {
 	Engin() *gin.Engine
 	Option() interface{}
+
+	Set(key string, value interface{})
 }
 
 func Setup(s Server) {
 	e := s.Engin()
-	o := s.Option()
 
 	e.Use(gin.Recovery())
-	e.Use(Option(o))
-	e.Use(Logger(o))
-	e.Use(redisPlugin(o))
-	e.Use(dbPlugin(o))
-	e.Use(Cors(o))
-	e.Use(Signature(o))
-	e.Use(Jwt(o))
-	e.Use(Perm(o))
+
+	e.Use(Option(s))
+	e.Use(Logger(s))
+	e.Use(Redis(s))
+	e.Use(DB(s))
+	e.Use(Cors(s))
+	e.Use(Signature(s))
+	e.Use(Jwt(s))
+	e.Use(Perm(s))
 }

@@ -7,9 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Jwt(opt interface{}) gin.HandlerFunc {
-	secret := value.MustGet(opt, "Jwt.Secret").(string)
-	expire := value.MustGet(opt, "Jwt.Expire").(int)
+func Jwt(s Server) gin.HandlerFunc {
+	o := s.Option()
+
+	secret := value.MustGet(o, "Jwt.Secret").(string)
+	expire := value.MustGet(o, "Jwt.Expire").(int)
 
 	jwt := jwt.NewJwt([]byte(secret), expire)
 

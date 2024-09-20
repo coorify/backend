@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"net"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/coorify/backend/logger"
@@ -17,10 +18,12 @@ import (
 )
 
 type Server struct {
+	keys map[string]interface{}
 	opt  interface{}
 	eng  *gin.Engine
 	svr  *http.Server
 	exit chan error
+	mu   sync.RWMutex
 }
 
 type SetupPlugin interface {
@@ -36,6 +39,7 @@ func NewServer(opt interface{}) *Server {
 	eng := gin.New()
 
 	svr := &Server{
+		keys: make(map[string]interface{}),
 		eng:  eng,
 		opt:  opt,
 		exit: make(chan error),
@@ -50,6 +54,28 @@ func (s *Server) Engin() *gin.Engine {
 
 func (s *Server) Option() interface{} {
 	return s.opt
+}
+
+func (s *Server) Set(key string, value interface{}) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.keys[key] = value
+}
+
+func (s *Server) Get(key string) (value interface{}, exists bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	value, exists = s.keys[key]
+	return
+}
+
+func (s *Server) MustGet(key string) interface{} {
+	if value, exists := s.Get(key); exists {
+		return value
+	}
+	panic("Key \"" + key + "\" does not exist")
 }
 
 func (s *Server) Group(relativePath string) *gin.RouterGroup {

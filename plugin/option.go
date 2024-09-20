@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Option(opt interface{}) gin.HandlerFunc {
+func Option(s Server) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set(field.SYS_OPTION, opt)
+		c.Set(field.SYS_OPTION, s.Option())
 	}
 }
