@@ -36,28 +36,34 @@ func initAdmin(db *gorm.DB, adm *option.AdminOption) error {
 	}).Error
 }
 
-func Database(opt interface{}) gin.HandlerFunc {
+var _db *gorm.DB
+
+func GetDB() *gorm.DB {
+	return _db
+}
+
+func dbPlugin(opt interface{}) gin.HandlerFunc {
 	o := value.MustGet(opt, "DB").(option.DatabaseOption)
 	a := value.MustGet(opt, "Admin").(option.AdminOption)
 
 	drv := dialector.NewDialector(&o)
 
-	db, err := gorm.Open(drv, &gorm.Config{
+	_db, err := gorm.Open(drv, &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	if err = initMigrate(db); err != nil {
+	if err = initMigrate(_db); err != nil {
 		panic(err)
 	}
 
-	if err = initAdmin(db, &a); err != nil {
+	if err = initAdmin(_db, &a); err != nil {
 		panic(err)
 	}
 
 	return func(ctx *gin.Context) {
-		ctx.Set(field.SYS_DB, db)
+		ctx.Set(field.SYS_DB, _db)
 	}
 }

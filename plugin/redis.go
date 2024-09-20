@@ -11,7 +11,13 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func Redis(o interface{}) gin.HandlerFunc {
+var _redis *redis.Client
+
+func GetRedis() *redis.Client {
+	return _redis
+}
+
+func redisPlugin(o interface{}) gin.HandlerFunc {
 	enable := value.MustGet(o, "Redis.Enable").(bool)
 
 	if !enable {
@@ -23,16 +29,16 @@ func Redis(o interface{}) gin.HandlerFunc {
 		panic(err)
 	}
 
-	ins := redis.NewClient(opt)
-	res, err := ins.ClientInfo(context.Background()).Result()
+	_redis := redis.NewClient(opt)
+	res, err := _redis.ClientInfo(context.Background()).Result()
 	if err != nil {
 		panic(err)
 	}
 
-	logger.Infof("redis remote: %s", ins.Options().Addr)
+	logger.Infof("redis remote: %s", _redis.Options().Addr)
 	logger.Infof("redis lib: %s", res.LibName)
 	logger.Infof("redis ver: %s", res.LibVer)
 	return func(c *gin.Context) {
-		c.Set(field.SYS_REDIS, ins)
+		c.Set(field.SYS_REDIS, _redis)
 	}
 }
