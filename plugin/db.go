@@ -43,12 +43,14 @@ func GetDB() *gorm.DB {
 }
 
 func dbPlugin(opt interface{}) gin.HandlerFunc {
+	var err error
+
 	o := value.MustGet(opt, "DB").(option.DatabaseOption)
 	a := value.MustGet(opt, "Admin").(option.AdminOption)
 
 	drv := dialector.NewDialector(&o)
 
-	_db, err := gorm.Open(drv, &gorm.Config{
+	_db, err = gorm.Open(drv, &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {

@@ -29,7 +29,7 @@ func redisPlugin(o interface{}) gin.HandlerFunc {
 		panic(err)
 	}
 
-	_redis := redis.NewClient(opt)
+	_redis = redis.NewClient(opt)
 	res, err := _redis.ClientInfo(context.Background()).Result()
 	if err != nil {
 		panic(err)
